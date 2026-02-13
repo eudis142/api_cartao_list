@@ -7,15 +7,6 @@ from src.config.database import get_db_client
 from src.config.settings import settings
 from typing import List
 import logging
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: bool = None
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/pessoas", tags=["Cartões"])
@@ -33,7 +24,7 @@ async def list_cartoes(
                              min_length=11,
                              max_length=14,
                              description="CPF (11 dígitos) ou CNPJ (14 dígitos) da pessoa",
-                             example="12345678901"
+                             examples=["12345678901", "12345678901234"]
                              )
 ):
     """Lista cartões de uma pessoa"""

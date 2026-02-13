@@ -1,4 +1,5 @@
 pytest
 setuptools
 wheel
+pytest-asyncio
 # TODO: update the necessary requirements to develop this package

@@ -6,6 +6,16 @@ authors = [{name = "Your Name", email = "your@email.com"}] #TODO: Add your name 
 requires-python = ">=3.9"
 dynamic = ["optional-dependencies"]
 
+# Runtime dependencies
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "databases[postgresql]>=0.7.0",
+    "asyncpg>=0.27.0"
+]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -15,7 +25,3 @@ optional-dependencies = {dev = {file = ["dev-requirements.txt"]}} # add packages
 
 [project.scripts]
 # TODO: add your CLI entry points here
-
-
-
-
