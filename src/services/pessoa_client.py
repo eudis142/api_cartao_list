@@ -1,29 +1,28 @@
 import httpx
 from typing import Dict, Optional
 import logging
-
+from src.repositories.cartao_repository import CartaoRepository
 logger = logging.getLogger(__name__)
 
 
 class PessoaClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, cartao_repository: CartaoRepository):
+        self.cartao_repository = cartao_repository
         self.base_url = base_url.rstrip('/')
         self.client = httpx.AsyncClient(timeout=30.0)
 
     async def get_pessoa_by_cpf(self, cpf_cnpj: str) -> Optional[Dict]:
         """Consulta pessoa no Time 02"""
         try:
-            url = f"{self.base_url}/pessoas/{cpf_cnpj}"
-            logger.info(f"Consultando pessoa em: {url}")
 
-            response = await self.client.get(url)
+            response = await self.cartao_repository.find_by_pessoa_id(cpf_cnpj)
 
-            if response.status_code == 200:
-                return response.json()
-            elif response.status_code == 404:
+            if response.__len__() != None:
+                return response
+            elif response == 404:
                 return None
             else:
-                logger.error(f"Erro ao consultar pessoa: {response.status_code}")
+                logger.error(f"Erro ao consultar pessoa: {response}")
                 return None
 
         except httpx.RequestError as e:

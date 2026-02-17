@@ -13,7 +13,7 @@ async def test_list_cartoes_success():
     mock_repo = MagicMock()
     mock_repo.find_by_pessoa_id = AsyncMock(return_value=[
         {
-            '_id': 'cartao-1',
+            'id': 'cartao-1',
             'numero_cartao': '1000123456789012',
             'pessoa_id': 'pessoa-456',
             'tipo_cartao': 'BILHETE_UNICO',
@@ -25,7 +25,7 @@ async def test_list_cartoes_success():
             'updated_at': '2025-01-10T10:00:00'
         },
         {
-            '_id': 'cartao-2',
+            'id': 'cartao-2',
             'numero_cartao': '2000987654321098',
             'pessoa_id': 'pessoa-456',
             'tipo_cartao': 'ESCOLAR',

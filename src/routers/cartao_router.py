@@ -33,7 +33,7 @@ async def list_cartoes(
 
         db_client = await get_db_client()
         repository = CartaoRepository(db_client)
-        pessoa_client = PessoaClient(base_url=settings.PESSOA_API_URL)
+        pessoa_client = PessoaClient(base_url=settings.PESSOA_API_URL, cartao_repository=repository)
 
         service = CartaoService(repository, pessoa_client)
         cartoes = await service.list_cartoes_by_pessoa(cpf_cnpj)

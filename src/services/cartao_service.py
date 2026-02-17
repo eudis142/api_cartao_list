@@ -25,21 +25,22 @@ class CartaoService:
                     detail=f"Não existe cadastro para o CPF/CNPJ {cpf_cnpj}"
                 )
 
-            pessoa_id = pessoa.get('id')
-            if not pessoa_id:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="ID da pessoa não encontrado na resposta do Time 02"
-                )
+            for doc in pessoa:
+                pessoa_id = doc.get('id')
+                if not pessoa_id:
+                  raise HTTPException(
+                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                     detail="ID da pessoa não encontrado na resposta do Time 02"
+                  )
 
             # 2. Buscar cartões
-            cartoes_docs = await self.repository.find_by_pessoa_id(pessoa_id)
+            cartoes_docs = await self.repository.find_by_id(pessoa_id)
 
             # 3. Converter para CartaoResponse
             cartoes_response = []
             for doc in cartoes_docs:
                 cartao = CartaoResponse(
-                    id=doc.get('_id'),
+                    id=doc.get('id'),
                     numero_cartao=doc.get('numero_cartao'),
                     pessoa_id=doc.get('pessoa_id'),
                     tipo_cartao=doc.get('tipo_cartao'),

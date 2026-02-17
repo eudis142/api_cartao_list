@@ -1,24 +1,28 @@
 import asyncio
-from motor.motor_asyncio import AsyncIOMotorClient
-from src.config.settings import settings
+from src.config.database import get_db_client, close_db_client
 
 
 async def create_indexes():
-    """Cria índices no MongoDB para otimizar queries"""
-    client = AsyncIOMotorClient(settings.MONGODB_URL)
-    db = client.cadastro_unificado
-    collection = db.cartoes
+    """Cria índices no PostgreSQL para otimizar queries"""
+    db_client = await get_db_client()
 
-    # Criar índice no campo pessoa_id
-    await collection.create_index("pessoa_id", name="idx_pessoa_id")
-    print("Índice idx_pessoa_id criado com sucesso!")
+    try:
+        # Criar índice no campo pessoa_id
+        query = "CREATE INDEX IF NOT EXISTS idx_cartoes_pessoa_id ON cartoes(pessoa_id)"
+        await db_client.execute(query=query)
+        print("Índice idx_cartoes_pessoa_id criado com sucesso!")
 
-    # Verificar índices existentes
-    indexes = await collection.index_information()
-    print(f"Índices existentes: {list(indexes.keys())}")
+        # Criar índice no campo numero_cartao
+        query = "CREATE INDEX IF NOT EXISTS idx_cartoes_numero ON cartoes(numero_cartao)"
+        await db_client.execute(query=query)
+        print("Índice idx_cartoes_numero criado com sucesso!")
 
-    client.close()
+        print("Todos os índices foram criados!")
 
+    except Exception as e:
+        print(f"Erro ao criar índices: {str(e)}")
+    finally:
+        await close_db_client()
 
 if __name__ == "__main__":
     asyncio.run(create_indexes())

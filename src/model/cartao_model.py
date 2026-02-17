@@ -1,12 +1,11 @@
 from datetime import datetime
 from typing import Optional
-
-from bson import ObjectId
+from uuid import uuid4
 from pydantic import BaseModel, Field
 from src.schemas.cartao_schemas import TipoCartaoEnum, StatusCartaoEnum
 
 class CartaoModel(BaseModel):
-    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")
+    id: str = Field(default_factory=lambda: str(uuid4()))
     numero_cartao: str = Field(..., min_length=16, max_length=16)
     pessoa_id: str
     tipo_cartao: TipoCartaoEnum
@@ -18,7 +17,6 @@ class CartaoModel(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
-        populate_by_name = True
         json_schema_extra = {
             "example": {
                 "numero_cartao": "1000123456789012",

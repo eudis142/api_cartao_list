@@ -17,7 +17,7 @@ class StatusCartaoEnum(str, Enum):
     CANCELADO = "CANCELADO"
 
 class CartaoResponse(BaseModel):
-    id: str = Field(..., alias="_id")
+    id: str
     numero_cartao: str
     pessoa_id: str
     tipo_cartao: TipoCartaoEnum
@@ -29,10 +29,9 @@ class CartaoResponse(BaseModel):
     updated_at: datetime
 
     class Config:
-        populate_by_name = True
         json_schema_extra = {
             "example": {
-                "_id": "123e4567-e89b-12d3-a456-426614174000",
+                "id": "123e4567-e89b-12d3-a456-426614174000",
                 "numero_cartao": "1000123456789012",
                 "pessoa_id": "123e4567-e89b-12d3-a456-426614174001",
                 "tipo_cartao": "BILHETE_UNICO",
