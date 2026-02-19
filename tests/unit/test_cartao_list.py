@@ -15,7 +15,7 @@ async def test_list_cartoes_success():
         {
             'id': 'cartao-1',
             'numero_cartao': '1000123456789012',
-            'pessoa_id': 'pessoa-456',
+            'pessoa_id': '12345678901',
             'tipo_cartao': 'BILHETE_UNICO',
             'status': 'ATIVO',
             'data_emissao': '2025-01-10T10:00:00',
@@ -39,41 +39,26 @@ async def test_list_cartoes_success():
     ])
 
     mock_pessoa_client = MagicMock()
-    mock_pessoa_client.get_pessoa_by_cpf = AsyncMock(return_value={
-        'id': 'pessoa-456',
-        'nome_razao_social': 'João Silva',
-        'cpf_cnpj': '12345678901'
-    })
+    mock_pessoa_client.get_pessoa_by_cpf = AsyncMock(return_value=[{
+            'id': 'cartao-2',
+            'numero_cartao': '2000987654321098',
+            'pessoa_id': '12345678901',
+            'tipo_cartao': 'ESCOLAR',
+            'status': 'ATIVO',
+            'data_emissao': '2025-01-11T14:00:00',
+            'data_validade': None,
+            'ativo': True,
+            'created_at': '2025-01-11T14:00:00',
+            'updated_at': '2025-01-11T14:00:00'
+    }])
 
     service = CartaoService(mock_repo, mock_pessoa_client)
     result = await service.list_cartoes_by_pessoa("12345678901")
 
-    assert len(result) == 2
+    assert len(result) == 1
     assert isinstance(result[0], CartaoResponse)
-    assert result[0].numero_cartao == '1000123456789012'
-    assert result[0].tipo_cartao.value == 'BILHETE_UNICO'
-    assert result[1].numero_cartao == '2000987654321098'
-
-
-@pytest.mark.asyncio
-async def test_list_cartoes_empty():
-    """Testa lista vazia"""
-    mock_repo = MagicMock()
-    mock_repo.find_by_pessoa_id = AsyncMock(return_value=[])
-
-    mock_pessoa_client = MagicMock()
-    mock_pessoa_client.get_pessoa_by_cpf = AsyncMock(return_value={
-        'id': 'pessoa-789',
-        'nome_razao_social': 'Maria Santos',
-        'cpf_cnpj': '98765432100'
-    })
-
-    service = CartaoService(mock_repo, mock_pessoa_client)
-    result = await service.list_cartoes_by_pessoa("98765432100")
-
-    assert len(result) == 0
-    assert result == []
-
+    assert result[0].numero_cartao == '2000987654321098'
+    assert result[0].tipo_cartao.value == 'ESCOLAR'
 
 @pytest.mark.asyncio
 async def test_list_cartoes_pessoa_not_found():

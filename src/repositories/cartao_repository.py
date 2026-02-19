@@ -26,18 +26,6 @@ class CartaoRepository:
             logger.error(f"Erro ao buscar cartões: {str(e)}")
             raise
 
-    async def find_by_id(self, id: str) -> List[Dict]:
-        """Busca todos os cartões de uma pessoa"""
-        try:
-            query = "SELECT id, pessoa_id, numero_cartao, status, tipo_cartao, ativo, data_emissao, data_validade, created_at, updated_at FROM public.cartoes WHERE id = :id"
-            cartoes = await self.db.fetch_all(query=query, values={"id": id})
-            result = [dict(row) for row in cartoes]
-            logger.info(f"Encontrados {len(result)} cartões para pessoa {id}")
-            return result
-        except Exception as e:
-            logger.error(f"Erro ao buscar cartões: {str(e)}")
-            raise
-
     async def save(self, cartao_data: Dict):
         """Salva um novo cartão"""
         try:
